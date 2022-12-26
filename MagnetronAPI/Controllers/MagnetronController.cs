@@ -23,6 +23,16 @@ namespace MagnetronAPI.Controllers
             return Ok(dishes);
         }
 
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Dish))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Route("GetDish")]
+        public IActionResult GetDish(int id)
+        {
+            Dish dish = _db.Dishes.Where(d => d.DishId == id).Include(dish => dish.Preps).FirstOrDefault();
+            return Ok(dish);
+        }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
