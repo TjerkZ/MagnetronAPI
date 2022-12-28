@@ -19,7 +19,8 @@ namespace MagnetronAPI.Controllers
         [Route("GetAllDishes")]
         public IActionResult GetAllDishes()
         {
-            List<Dish> dishes = _db.Dishes.Include(dish => dish.Preps).ToList();
+            //List<Dish> dishes = _db.Dishes.Include(dish => dish.Preps).ToList();
+            List<Dish> dishes = _db.Dishes.ToList();
             return Ok(dishes);
         }
 
