@@ -63,7 +63,7 @@ namespace MagnetronAPI.Controllers
                 Notes = notes
             };
 
-            var dish = _db.Dishes.Find(dishID);
+            var dish = _db.Dishes.Where(d => d.DishId == dishID).Include(dish => dish.Preps).FirstOrDefault(); ;
             if (dish != null) 
             {
                 dish.Preps ??= new();
