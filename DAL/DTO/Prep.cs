@@ -1,8 +1,14 @@
-﻿namespace MagnetronAPI.Model
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
+
+namespace DAL.DTO
 {
     public class Prep
     {
-        public int PrepId { get; set; }
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string? PrepId { get; set; }
+        public string? DishId { get; set; }
         public string? Mode { get; set; }
         public int? Watt { get; set; }
         public int? Temp { get; set; }

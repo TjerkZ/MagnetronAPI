@@ -12,7 +12,7 @@
     "MagnetronAPI": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "GetAllDishes",
       "applicationUrl": "http://localhost:5001",
       "environmentVariables": {

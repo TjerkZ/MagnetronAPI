@@ -1,25 +1,24 @@
-using MagnetronAPI;
-using Microsoft.EntityFrameworkCore;
+using DAL;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddDbContext<MagnetonContext>(opt =>
-{
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("MagnetronContext"));
-});
+builder.Services.Configure<ProjectDatabaseSettings>(
+    builder.Configuration.GetSection("ConnectionStrings"));
+
+builder.Services.AddScoped<MagnetronDAO>();
 
 // CORS Configuration
-builder.Services.AddCors(opt =>
-{
-    opt.AddDefaultPolicy(builder =>
-    {
-        builder
-            .AllowAnyOrigin()
-            .AllowAnyHeader()
-            .AllowAnyMethod();
-    });
-});
+//builder.Services.AddCors(opt =>
+//{
+//    opt.AddDefaultPolicy(builder =>
+//    {
+//        builder
+//            .AllowAnyOrigin()
+//            .AllowAnyHeader()
+//            .AllowAnyMethod();
+//    });
+//});
 
 builder.Services.AddControllers();
 
@@ -29,7 +28,7 @@ var app = builder.Build();
 
 app.UseAuthorization();
 
-app.UseCors();
+//app.UseCors();
 
 app.MapControllers();
 

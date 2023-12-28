@@ -1,26 +1,24 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using DAL;
+using DAL.DTO;
 using Microsoft.AspNetCore.Mvc;
-using MagnetronAPI.Model;
-using Microsoft.EntityFrameworkCore;
 
 namespace MagnetronAPI.Controllers
 {
     public class MagnetronController : Controller
     {
-        private readonly MagnetonContext _db;
-        public MagnetronController(MagnetonContext magnetonContext)
+        private readonly MagnetronDAO _magnetronDAO;
+        public MagnetronController(MagnetronDAO magnetronDAO)
         {
-            _db = magnetonContext;
+            _magnetronDAO = magnetronDAO;
         }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Dish>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("GetAllDishes")]
-        public IActionResult GetAllDishes()
+        public async Task<IActionResult> GetAllDishes()
         {
-            //List<Dish> dishes = _db.Dishes.Include(dish => dish.Preps).ToList();
-            List<Dish> dishes = _db.Dishes.ToList();
+            List<Dish> dishes = await _magnetronDAO.GetAllDishesAsync();
             return Ok(dishes);
         }
 
@@ -28,9 +26,10 @@ namespace MagnetronAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Dish))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("GetDish")]
-        public IActionResult GetDish(int id)
+        public async Task<IActionResult> GetDish(string id)
         {
-            Dish dish = _db.Dishes.Where(d => d.DishId == id).Include(dish => dish.Preps).FirstOrDefault();
+            //Dish dish = _db.Dishes.Where(d => d.DishId == id).Include(dish => dish.Preps).FirstOrDefault();
+            Dish dish = await _magnetronDAO.GetDishAsync(id);
             return Ok(dish);
         }
 
@@ -38,13 +37,15 @@ namespace MagnetronAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("AddDish")]
-        public IActionResult AddDish(string name)
+        public async Task<IActionResult> AddDish(string name)
         {
-            Dish dish = new() { 
-                Name = name 
+            Dish dish = new()
+            {
+                Name = name
             };
-            _db.Dishes.Add(dish);
-            _db.SaveChanges();
+
+            await _magnetronDAO.AddDishAsync(dish);
+
             return Ok();
         }
 
@@ -52,10 +53,11 @@ namespace MagnetronAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("AddPrep")]
-        public IActionResult AddPrep(int dishID, string mode, int watt, int temp, int rating, string notes)
+        public async Task<IActionResult> AddPrep(string dishID, string mode, int watt, int temp, int rating, string notes)
         {
             Prep prep = new()
             {
+                DishId = dishID,
                 Mode = mode,
                 Watt = watt,
                 Temp = temp,
@@ -63,18 +65,7 @@ namespace MagnetronAPI.Controllers
                 Notes = notes
             };
 
-            var dish = _db.Dishes.Where(d => d.DishId == dishID).Include(dish => dish.Preps).FirstOrDefault(); ;
-            if (dish != null) 
-            {
-                dish.Preps ??= new();
-                dish.Preps.Add(prep);
-            }
-            else
-            {
-                return BadRequest("id does not exist");
-            }
-
-            _db.SaveChanges();
+            await _magnetronDAO.AddPrepAsync(prep);
 
             return Ok();
         }
