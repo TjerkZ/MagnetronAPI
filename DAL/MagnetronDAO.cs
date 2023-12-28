@@ -33,7 +33,7 @@ namespace DAL
             Dish dish = await _dishCollection.Find(x => x.DishId == dishId).FirstOrDefaultAsync();
             if (dish == null || dish.DishId == null) return new();
 
-            List<Prep> preps = await _prepCollection.Find(_ => true).ToListAsync();
+            List<Prep> preps = await _prepCollection.Find(x => x.DishId == dishId).ToListAsync();
             dish.Preps = preps;
 
             return dish;
