@@ -8,17 +8,17 @@ builder.Services.Configure<ProjectDatabaseSettings>(
 
 builder.Services.AddScoped<MagnetronDAO>();
 
-// CORS Configuration
-//builder.Services.AddCors(opt =>
-//{
-//    opt.AddDefaultPolicy(builder =>
-//    {
-//        builder
-//            .AllowAnyOrigin()
-//            .AllowAnyHeader()
-//            .AllowAnyMethod();
-//    });
-//});
+//CORS Configuration
+builder.Services.AddCors(opt =>
+{
+    opt.AddDefaultPolicy(builder =>
+    {
+        builder
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
 builder.Services.AddControllers();
 
@@ -28,7 +28,7 @@ var app = builder.Build();
 
 app.UseAuthorization();
 
-//app.UseCors();
+app.UseCors();
 
 app.MapControllers();
 
