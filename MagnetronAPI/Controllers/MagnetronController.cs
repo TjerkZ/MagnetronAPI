@@ -33,15 +33,26 @@ namespace MagnetronAPI.Controllers
             return Ok(dish);
         }
 
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<MagnetronBrand>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Route("GetAllMagnetrons")]
+        public async Task<IActionResult> GetAllMagnetrons()
+        {
+            List<MagnetronBrand> magnetrons = await _magnetronDAO.GetAllMagnetronsAsync();
+            return Ok(magnetrons);
+        }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("AddDish")]
-        public async Task<IActionResult> AddDish(string name)
+        public async Task<IActionResult> AddDish(string name, string brand)
         {
             Dish dish = new()
             {
-                Name = name
+                Name = name,
+                Brand = brand
             };
 
             await _magnetronDAO.AddDishAsync(dish);
@@ -53,7 +64,7 @@ namespace MagnetronAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("AddPrep")]
-        public async Task<IActionResult> AddPrep(string dishID, string mode, int watt, int temp, int rating, string notes)
+        public async Task<IActionResult> AddPrep(string dishID, string mode, int watt, int temp, int rating, string notes, string magnetron)
         {
             Prep prep = new()
             {
@@ -62,10 +73,27 @@ namespace MagnetronAPI.Controllers
                 Watt = watt,
                 Temp = temp,
                 Rating = rating,
-                Notes = notes
+                Notes = notes,
+                Magnetron = magnetron
             };
 
             await _magnetronDAO.AddPrepAsync(prep);
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Route("AddMagnetron")]
+        public async Task<IActionResult> AddMagnetron(string name)
+        {
+            MagnetronBrand magnetron = new()
+            {
+                Name = name
+            };
+
+            await _magnetronDAO.AddMagnetron(magnetron);
 
             return Ok();
         }

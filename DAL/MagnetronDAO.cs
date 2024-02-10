@@ -8,6 +8,8 @@ namespace DAL
     {
         private readonly IMongoCollection<Prep> _prepCollection;
         private readonly IMongoCollection<Dish> _dishCollection;
+        private readonly IMongoCollection<MagnetronBrand> _magnetronCollection;
+
 
         public MagnetronDAO(IOptions<ProjectDatabaseSettings> projectDatabaseSettings)
         {
@@ -21,6 +23,8 @@ namespace DAL
             _prepCollection = mongoDatabase.GetCollection<Prep>("preps");
 
             _dishCollection = mongoDatabase.GetCollection<Dish>("dishes");
+
+            _magnetronCollection = mongoDatabase.GetCollection<MagnetronBrand>("magnetrons");
         }
 
         public async Task<List<Dish>> GetAllDishesAsync()
@@ -39,6 +43,11 @@ namespace DAL
             return dish;
         }
 
+        public async Task<List<MagnetronBrand>> GetAllMagnetronsAsync()
+        {
+            return await _magnetronCollection.Find(_ => true).ToListAsync();
+        }
+
         public Task AddDishAsync(Dish dish)
         {
             return _dishCollection.InsertOneAsync(dish);
@@ -47,6 +56,11 @@ namespace DAL
         public Task AddPrepAsync(Prep prep)
         {
             return _prepCollection.InsertOneAsync(prep);
+        }
+
+        public Task AddMagnetron(MagnetronBrand magnetronBrand)
+        {
+            return _magnetronCollection.InsertOneAsync(magnetronBrand);
         }
 
         public Task DeletePrepAsync(string prepId)

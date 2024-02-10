@@ -9,6 +9,7 @@ namespace DAL.DTO
         [BsonRepresentation(BsonType.ObjectId)]
         public string? DishId { get; set; }
         public string? Name { get; set; }
+        public string? Brand { get; set; }
         public List<Prep>? Preps { get; set; }
     }
 }

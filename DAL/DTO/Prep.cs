@@ -9,6 +9,7 @@ namespace DAL.DTO
         [BsonRepresentation(BsonType.ObjectId)]
         public string? PrepId { get; set; }
         public string? DishId { get; set; }
+        public string? Magnetron { get; set; }
         public string? Mode { get; set; }
         public int? Watt { get; set; }
         public int? Temp { get; set; }
